@@ -253,7 +253,7 @@ serve(async (req) => {
   } catch (e) {
     console.error("chat-assistant erro:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Erro desconhecido" }),
+      JSON.stringify({ error: "Erro interno no assistente." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
