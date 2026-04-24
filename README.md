@@ -50,6 +50,7 @@ Contribuições são muito bem-vindas! Sinta-se à vontade para abrir uma *Issue
 5. Abra um **Pull Request**.
 --- 
 **Desenvolvido pela equipe Tech Lab**  
+
 Luan Santos Janz - 04213586  
 Rafael Melo Portilho - 04214105  
 Talita Bárbara de Bastos - 04186770  
