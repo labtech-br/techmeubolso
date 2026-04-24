@@ -25,7 +25,6 @@ const tiles: { to: string; label: string; Icon: typeof PlusCircle; primary?: boo
   { to: "/fixos", label: "Gastos fixos", Icon: Repeat },
   { to: "/metas", label: "Metas", Icon: Target },
   { to: "/calculadora", label: "Calculadora", Icon: Calculator },
-  { to: "/lembretes", label: "Lembretes", Icon: Bell },
 ];
 
 export default function Home() {
