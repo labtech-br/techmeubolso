@@ -50,4 +50,11 @@ Contribuições são muito bem-vindas! Sinta-se à vontade para abrir uma *Issue
 5. Abra um **Pull Request**.
 --- 
 **Desenvolvido pela equipe Tech Lab**  
+Luan Santos Janz - 04213586  
+Rafael Melo Portilho - 04214105  
+Talita Bárbara de Bastos - 04186770  
+Michel Goes de Melo Sampaio - 04216027  
+Antônio Maia de Jesus Chaves Neto - 04133232  
+Augusto Cezar Bulhões Gonçalves - 04216718
+
 *Transformando a gestão financeira em algo simples para todos.*
