@@ -58,8 +58,12 @@ export default function Landing() {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
           <div className="flex items-center gap-3">
             <img
-              src="/logo.jpg"
+              src="/logo-sm.jpg"
               alt="Meu Bolso"
+              width={48}
+              height={48}
+              fetchPriority="high"
+              decoding="async"
               className="h-12 w-12 rounded-2xl shadow-soft object-cover"
             />
             <span className="font-display text-2xl font-bold text-foreground">

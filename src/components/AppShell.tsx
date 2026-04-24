@@ -81,8 +81,11 @@ export default function AppShell({ children, title, showBack, showSettings = tru
             ) : (
               <Link to="/app" className="flex items-center gap-2">
                 <img
-                  src="/logo.jpg"
+                  src="/logo-sm.jpg"
                   alt="Meu Bolso"
+                  width={44}
+                  height={44}
+                  decoding="async"
                   className="h-11 w-11 rounded-2xl shadow-soft object-cover"
                 />
                 <span className="font-display text-xl font-bold text-foreground">
