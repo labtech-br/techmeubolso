@@ -41,7 +41,7 @@ export default function AddExpense() {
       title: "Gasto adicionado!",
       description: `${formatBRL(num)} em ${CATEGORIES.find((c) => c.id === category)?.label}.`,
     });
-    navigate("/");
+    navigate("/app");
   };
 
   return (
