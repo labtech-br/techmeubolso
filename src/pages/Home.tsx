@@ -4,7 +4,6 @@ import {
   Wallet,
   Calculator,
   Sparkles,
-  Bell,
   Repeat,
   Target,
 } from "lucide-react";
