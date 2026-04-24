@@ -212,7 +212,7 @@ export default function Landing() {
       </section>
 
       {/* CTA final */}
-      <section className="px-4 pb-20">
+      <section className="cv-auto px-4 pb-20">
         <div className="mx-auto max-w-4xl rounded-3xl bg-gradient-primary p-10 text-center text-primary-foreground shadow-elevated sm:p-16">
           <h2 className="font-display text-3xl font-bold sm:text-4xl">
             Pronto para começar?
