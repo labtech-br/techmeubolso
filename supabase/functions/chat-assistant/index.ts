@@ -129,6 +129,25 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Rate limit: por usuário se autenticado, senão por IP
+  const userId = await getUserIdFromAuth(req.headers.get("Authorization"));
+  const rlKey = userId ? `u:${userId}` : `ip:${getClientIp(req)}`;
+  const rlMax = userId ? RL_MAX_AUTH : RL_MAX_ANON;
+  const rl = rateLimit(rlKey, rlMax);
+  if (!rl.ok) {
+    return new Response(
+      JSON.stringify({ error: "Muitas requisições. Tente novamente em instantes." }),
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Retry-After": String(rl.retryAfter),
+        },
+      },
+    );
+  }
+
   try {
     const body = await req.json();
     const messages = Array.isArray(body?.messages) ? body.messages : [];
