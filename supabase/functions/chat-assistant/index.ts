@@ -73,12 +73,50 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, context } = await req.json();
+    const body = await req.json();
+    const messages = Array.isArray(body?.messages) ? body.messages : [];
+    const context = body?.context;
+
+    // Caps anti-abuso (sem auth, app é local-only via localStorage)
+    const MAX_MESSAGES = 30;
+    const MAX_CHARS_PER_MSG = 2000;
+    const MAX_TOTAL_CHARS = 12000;
+
+    if (messages.length === 0) {
+      return new Response(JSON.stringify({ error: "Mensagens obrigatórias." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (messages.length > MAX_MESSAGES) {
+      return new Response(
+        JSON.stringify({ error: `Histórico muito longo (máx ${MAX_MESSAGES} mensagens).` }),
+        { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+    let totalChars = 0;
+    for (const m of messages) {
+      const c = typeof m?.content === "string" ? m.content : "";
+      if (c.length > MAX_CHARS_PER_MSG) {
+        return new Response(
+          JSON.stringify({ error: `Mensagem muito longa (máx ${MAX_CHARS_PER_MSG} caracteres).` }),
+          { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+      totalChars += c.length;
+    }
+    if (totalChars > MAX_TOTAL_CHARS) {
+      return new Response(
+        JSON.stringify({ error: `Conversa muito longa (máx ${MAX_TOTAL_CHARS} caracteres no total).` }),
+        { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY não configurado");
 
     const ctxLine = context
-      ? `\n\nContexto atual do usuário: ${JSON.stringify(context)}`
+      ? `\n\nContexto atual do usuário: ${JSON.stringify(context).slice(0, 1000)}`
       : "";
 
     const response = await fetch(
