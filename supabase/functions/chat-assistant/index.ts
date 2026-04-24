@@ -1,10 +1,67 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
+
+// --- Rate limit em memória (best-effort, por isolate) ---
+// Janela deslizante simples. Não compartilha estado entre instâncias paralelas
+// e reseta quando o isolate é reciclado. Para garantia forte, usar Postgres + auth.
+const RL_WINDOW_MS = 60_000; // 1 minuto
+const RL_MAX_AUTH = 20;       // 20 req/min por usuário autenticado
+const RL_MAX_ANON = 6;        // 6 req/min por IP anônimo
+const rlBuckets = new Map<string, number[]>();
+
+function rateLimit(key: string, max: number): { ok: boolean; retryAfter: number } {
+  const now = Date.now();
+  const arr = (rlBuckets.get(key) ?? []).filter((t) => now - t < RL_WINDOW_MS);
+  if (arr.length >= max) {
+    const retryAfter = Math.ceil((RL_WINDOW_MS - (now - arr[0])) / 1000);
+    rlBuckets.set(key, arr);
+    return { ok: false, retryAfter: Math.max(1, retryAfter) };
+  }
+  arr.push(now);
+  rlBuckets.set(key, arr);
+  // GC leve
+  if (rlBuckets.size > 5000) {
+    for (const [k, v] of rlBuckets) {
+      const kept = v.filter((t) => now - t < RL_WINDOW_MS);
+      if (kept.length === 0) rlBuckets.delete(k);
+      else rlBuckets.set(k, kept);
+    }
+  }
+  return { ok: true, retryAfter: 0 };
+}
+
+function getClientIp(req: Request): string {
+  const xff = req.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  return req.headers.get("cf-connecting-ip")
+    ?? req.headers.get("x-real-ip")
+    ?? "unknown";
+}
+
+async function getUserIdFromAuth(authHeader: string | null): Promise<string | null> {
+  if (!authHeader?.startsWith("Bearer ")) return null;
+  const token = authHeader.slice(7);
+  // anon key não conta como usuário
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!supabaseUrl || !anonKey || token === anonKey) return null;
+  try {
+    const client = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data } = await client.auth.getUser(token);
+    return data?.user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
 
 const SYSTEM_PROMPT = `Você é o assistente do "Meu Bolso", um app de finanças pessoais inclusivo.
 Fale em português do Brasil, de forma curta, simples e gentil — pense em explicar para alguém com pouca familiaridade digital.
@@ -70,6 +127,25 @@ const TOOLS = [
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // Rate limit: por usuário se autenticado, senão por IP
+  const userId = await getUserIdFromAuth(req.headers.get("Authorization"));
+  const rlKey = userId ? `u:${userId}` : `ip:${getClientIp(req)}`;
+  const rlMax = userId ? RL_MAX_AUTH : RL_MAX_ANON;
+  const rl = rateLimit(rlKey, rlMax);
+  if (!rl.ok) {
+    return new Response(
+      JSON.stringify({ error: "Muitas requisições. Tente novamente em instantes." }),
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Retry-After": String(rl.retryAfter),
+        },
+      },
+    );
   }
 
   try {
@@ -177,7 +253,7 @@ serve(async (req) => {
   } catch (e) {
     console.error("chat-assistant erro:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Erro desconhecido" }),
+      JSON.stringify({ error: "Erro interno no assistente." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
