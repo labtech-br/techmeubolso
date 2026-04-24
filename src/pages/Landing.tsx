@@ -192,7 +192,7 @@ export default function Landing() {
       </section>
 
       {/* Como funciona */}
-      <section id="como-funciona" className="py-16 sm:py-24">
+      <section id="como-funciona" className="cv-auto py-16 sm:py-24">
         <div className="mx-auto max-w-5xl px-4">
           <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">
             Em 3 passos você está no controle
