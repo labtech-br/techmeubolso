@@ -163,7 +163,7 @@ export default function Landing() {
       </section>
 
       {/* Features */}
-      <section className="bg-card/40 py-16 sm:py-24">
+      <section className="cv-auto bg-card/40 py-16 sm:py-24">
         <div className="mx-auto max-w-5xl px-4">
           <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">
             Tudo o que você precisa, nada que confunda
@@ -192,7 +192,7 @@ export default function Landing() {
       </section>
 
       {/* Como funciona */}
-      <section id="como-funciona" className="py-16 sm:py-24">
+      <section id="como-funciona" className="cv-auto py-16 sm:py-24">
         <div className="mx-auto max-w-5xl px-4">
           <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">
             Em 3 passos você está no controle
@@ -212,7 +212,7 @@ export default function Landing() {
       </section>
 
       {/* CTA final */}
-      <section className="px-4 pb-20">
+      <section className="cv-auto px-4 pb-20">
         <div className="mx-auto max-w-4xl rounded-3xl bg-gradient-primary p-10 text-center text-primary-foreground shadow-elevated sm:p-16">
           <h2 className="font-display text-3xl font-bold sm:text-4xl">
             Pronto para começar?
