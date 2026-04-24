@@ -1,6 +1,6 @@
 # Meu Bolso — Controle financeiro fácil e acessível
 
-![Meu Bolso Banner](https://github.com/labtech-br/techmeubolso/main/public/meu_bolso_logo.png?raw=true)
+![Meu Bolso Banner](https://github.com/labtech-br/techmeubolso/blob/25eb852ca6d5f689c02fbaa75ddbfaf4defc9e68/public/meu_bolso_logo.png)
 
 ## 💰 Seu dinheiro, fácil de entender.
 
