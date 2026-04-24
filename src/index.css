@@ -8,50 +8,62 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Meu Bolso — Esmeralda Prestígio */
+    --background: 60 33% 97%;            /* #f5f0e0 cream */
+    --foreground: 162 78% 12%;           /* deep emerald text */
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 162 78% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 162 78% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 162 78% 16%;              /* #064e3b */
+    --primary-foreground: 60 33% 97%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --primary-glow: 158 80% 26%;         /* #0d7a5f */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --secondary: 60 30% 92%;
+    --secondary-foreground: 162 78% 16%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 60 25% 90%;
+    --muted-foreground: 162 20% 30%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 45 53% 54%;                /* #c9a84c gold */
+    --accent-foreground: 162 78% 12%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --success: 158 80% 26%;
+    --success-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --warning: 35 85% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 70% 42%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 60 20% 85%;
+    --input: 60 20% 85%;
+    --ring: 158 80% 26%;
+
+    --radius: 1.25rem;
+
+    --gradient-primary: linear-gradient(135deg, hsl(162 78% 16%), hsl(158 80% 26%));
+    --gradient-gold: linear-gradient(135deg, hsl(45 53% 54%), hsl(45 60% 65%));
+    --gradient-soft: linear-gradient(180deg, hsl(60 33% 97%), hsl(60 30% 92%));
+
+    --shadow-soft: 0 4px 20px -8px hsl(162 78% 12% / 0.15);
+    --shadow-elevated: 0 12px 40px -12px hsl(162 78% 12% / 0.25);
+    --shadow-button: 0 6px 0 0 hsl(162 78% 10%);
+
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -100,6 +112,46 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body antialiased;
+    font-feature-settings: "ss01", "cv11";
   }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+
+  /* Accessibility: large readable focus rings */
+  *:focus-visible {
+    @apply outline-none ring-4 ring-ring/40 ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .bg-gradient-primary { background-image: var(--gradient-primary); }
+  .bg-gradient-gold { background-image: var(--gradient-gold); }
+  .bg-gradient-soft { background-image: var(--gradient-soft); }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-elevated { box-shadow: var(--shadow-elevated); }
+}
+
+/* Acessibilidade: alto contraste e movimento reduzido */
+html.hc {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --primary: 162 100% 18%;
+  --primary-foreground: 0 0% 100%;
+  --border: 0 0% 0%;
+  --muted-foreground: 0 0% 15%;
+  --secondary: 0 0% 95%;
+  --accent: 45 100% 40%;
+}
+html.rm *,
+html.rm *::before,
+html.rm *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
 }
