@@ -52,14 +52,6 @@ Se você deseja rodar este projeto localmente:
 
 ---
 
-## 🛣️ Roadmap de Melhorias
-
-*   [ ] **Autenticação de Usuários**: Login seguro para salvar dados na nuvem.
-*   [ ] **Categorização Automática**: IA para classificar gastos por contexto.
-*   [ ] **Exportação de Dados**: Gerar relatórios em PDF ou Excel para o contador.
-*   [ ] **Modo Offline**: Registro de gastos mesmo sem internet.
-*   [ ] **Integração Bancária**: Importação automática de extratos via Open Finance.
-
 ## 🤝 Contribuição
 
 Contribuições são muito bem-vindas! Sinta-se à vontade para abrir uma *Issue* ou enviar um *Pull Request*.
