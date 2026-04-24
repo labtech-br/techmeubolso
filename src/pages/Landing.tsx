@@ -163,7 +163,7 @@ export default function Landing() {
       </section>
 
       {/* Features */}
-      <section className="bg-card/40 py-16 sm:py-24">
+      <section className="cv-auto bg-card/40 py-16 sm:py-24">
         <div className="mx-auto max-w-5xl px-4">
           <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">
             Tudo o que você precisa, nada que confunda
