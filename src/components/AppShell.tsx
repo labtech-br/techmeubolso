@@ -1,8 +1,9 @@
 import { ReactNode, useEffect, useState, useRef } from "react";
-import { ArrowLeft, Settings, Bell, BellRing, X } from "lucide-react";
+import { ArrowLeft, Settings, Bell, BellRing, X, Volume2, VolumeX } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppState, spentThisMonth, formatBRL } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
+import { isSpeechSupported, stopSpeaking, useSpeak, useSpeechSettings } from "@/lib/speech";
 
 interface Props {
   children: ReactNode;
@@ -16,6 +17,30 @@ export default function AppShell({ children, title, showBack, showSettings = tru
   const { state } = useAppState();
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const speak = useSpeak();
+  const { settings: speechSettings } = useSpeechSettings();
+  const [readingScreen, setReadingScreen] = useState(false);
+
+  const readScreen = () => {
+    if (readingScreen) {
+      stopSpeaking();
+      setReadingScreen(false);
+      return;
+    }
+    const el = mainRef.current;
+    if (!el) return;
+    // Captura texto visível da tela, ignorando ícones e botões repetidos
+    const text = (el.innerText || "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 1500);
+    if (!text) return;
+    const intro = title ? `${title}. ` : "";
+    setReadingScreen(true);
+    speak(intro + text);
+    setTimeout(() => setReadingScreen(false), Math.max(2000, text.length * 80));
+  };
 
   const totalMes = spentThisMonth(state.expenses);
   const restante = state.salary - totalMes;
@@ -167,12 +192,26 @@ export default function AppShell({ children, title, showBack, showSettings = tru
           </div>
         )}
       </header>
-      <main className="mx-auto max-w-3xl px-4 py-6 sm:py-10 animate-fade-in-up">
+      <main ref={mainRef} className="mx-auto max-w-3xl px-4 py-6 sm:py-10 animate-fade-in-up">
         {children}
       </main>
       <footer className="mx-auto max-w-3xl px-4 pb-10 pt-4 text-center text-sm text-muted-foreground">
         Feito com cuidado para você cuidar do seu bolso 💚
       </footer>
+
+      {/* Botão flutuante "Ler tela" */}
+      {isSpeechSupported() && speechSettings.enabled && (
+        <button
+          type="button"
+          onClick={readScreen}
+          aria-label={readingScreen ? "Parar leitura da tela" : "Ler a tela em voz alta"}
+          className={`fixed bottom-5 right-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground shadow-elevated transition-all hover:scale-105 active:scale-95 ${
+            readingScreen ? "animate-pulse" : ""
+          }`}
+        >
+          {readingScreen ? <VolumeX className="h-7 w-7" /> : <Volume2 className="h-7 w-7" />}
+        </button>
+      )}
     </div>
   );
 }

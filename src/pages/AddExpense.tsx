@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CATEGORIES, Category, useAppState, formatBRL } from "@/lib/storage";
 import VoiceInput from "@/components/VoiceInput";
+import SpeakButton from "@/components/SpeakButton";
+import { useSpeak } from "@/lib/speech";
 import { useToast } from "@/hooks/use-toast";
 import { Check } from "lucide-react";
 
@@ -12,6 +14,7 @@ export default function AddExpense() {
   const navigate = useNavigate();
   const { state, addExpense, unlockAchievement } = useAppState();
   const { toast } = useToast();
+  const speak = useSpeak();
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<Category>("alimentacao");
   const [description, setDescription] = useState("");
@@ -19,6 +22,12 @@ export default function AddExpense() {
 
   const num = parseFloat(amount.replace(",", "."));
   const valid = isFinite(num) && num > 0;
+
+  const pickCategory = (c: Category) => {
+    setCategory(c);
+    const label = CATEGORIES.find((x) => x.id === c)?.label;
+    if (label) speak(`Categoria: ${label}`);
+  };
 
   const handleVoice = (text: string) => {
     const m = text.match(/(\d+[.,]?\d*)/);
@@ -48,9 +57,12 @@ export default function AddExpense() {
     <AppShell title="Adicionar gasto" showBack>
       <div className="space-y-6">
         <div className="rounded-3xl border-2 border-border bg-card p-6 shadow-soft">
-          <label htmlFor="amount" className="mb-2 block text-base font-semibold">
-            Quanto você gastou?
-          </label>
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <label htmlFor="amount" className="block text-base font-semibold">
+              Quanto você gastou?
+            </label>
+            <SpeakButton text="Quanto você gastou? Digite ou fale o valor." size="sm" />
+          </div>
           <Input
             id="amount"
             inputMode="decimal"
@@ -67,7 +79,10 @@ export default function AddExpense() {
         </div>
 
         <div className="rounded-3xl border-2 border-border bg-card p-6 shadow-soft">
-          <p className="mb-3 text-base font-semibold">Em qual categoria?</p>
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <p className="text-base font-semibold">Em qual categoria?</p>
+            <SpeakButton text="Em qual categoria? Toque na categoria certa." size="sm" />
+          </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {CATEGORIES.map((c) => {
               const active = category === c.id;
@@ -75,7 +90,7 @@ export default function AddExpense() {
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => setCategory(c.id)}
+                  onClick={() => pickCategory(c.id)}
                   aria-pressed={active}
                   className={`relative rounded-2xl border-2 p-4 text-center transition-all active:animate-press ${
                     active

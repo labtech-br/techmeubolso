@@ -8,6 +8,8 @@ import {
   Target,
 } from "lucide-react";
 import AppShell from "@/components/AppShell";
+import SpeakButton from "@/components/SpeakButton";
+import { useAutoSpeak, useSpeechSettings } from "@/lib/speech";
 import {
   useAppState,
   formatBRL,
