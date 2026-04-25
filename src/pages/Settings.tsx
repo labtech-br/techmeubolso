@@ -2,13 +2,17 @@ import { useState } from "react";
 import AppShell from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { useAppState, formatBRL } from "@/lib/storage";
+import { useSpeechSettings, useSpeak, isSpeechSupported } from "@/lib/speech";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
-import { Accessibility } from "lucide-react";
+import { Accessibility, Volume2 } from "lucide-react";
 
 export default function SettingsPage() {
   const { state, update, reset } = useAppState();
+  const { settings: speech, update: updateSpeech } = useSpeechSettings();
+  const speakSample = useSpeak();
   const { toast } = useToast();
   const [salary, setSalary] = useState(String(state.salary || ""));
 
