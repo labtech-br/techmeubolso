@@ -182,7 +182,7 @@ export default function Assistant() {
   };
 
   return (
-    <AppShell title="Assistente IA" showBack>
+    <AppShell title="Talita (IA)" showBack>
       {/* Tabs */}
       <div className="mb-5 flex gap-2">
         <button
