@@ -19,7 +19,7 @@ import {
 
 const tiles: { to: string; label: string; Icon: typeof PlusCircle; primary?: boolean; highlight?: boolean }[] = [
   { to: "/adicionar", label: "Adicionar gasto", Icon: PlusCircle, primary: true },
-  { to: "/assistente", label: "Assistente IA", Icon: Sparkles, highlight: true },
+  { to: "/assistente", label: "Talita (IA)", Icon: Sparkles, highlight: true },
   { to: "/saldo", label: "Ver saldo", Icon: Wallet },
   { to: "/fixos", label: "Gastos fixos", Icon: Repeat },
   { to: "/metas", label: "Metas", Icon: Target },

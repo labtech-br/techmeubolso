@@ -76,7 +76,7 @@ export default function Assistant() {
     {
       role: "assistant",
       content:
-        "Olá! Eu sou o assistente do Meu Bolso 💚 Posso te dar dicas e também anotar gastos para você. Por exemplo: diga 'gastei 30 reais com pão' que eu registro.",
+        "Olá! Eu sou a Talita, sua assistente do Meu Bolso 💚 Posso te dar dicas e também anotar gastos para você. Por exemplo: diga 'gastei 30 reais com pão' que eu registro.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -182,7 +182,7 @@ export default function Assistant() {
   };
 
   return (
-    <AppShell title="Assistente IA" showBack>
+    <AppShell title="Talita (IA)" showBack>
       {/* Tabs */}
       <div className="mb-5 flex gap-2">
         <button
