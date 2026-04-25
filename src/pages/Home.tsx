@@ -30,36 +30,21 @@ const tiles: { to: string; label: string; Icon: typeof PlusCircle; primary?: boo
 
 export default function Home() {
   const { state } = useAppState();
-  const { settings: speechSettings } = useSpeechSettings();
+  if (!state.onboarded) return <Navigate to="/bem-vindo" replace />;
 
   const totalMes = spentThisMonth(state.expenses);
   const totalHoje = spentToday(state.expenses);
   const restante = state.salary - totalMes;
   const byCat = spentByCategory(state.expenses);
 
-  const balanceText = `Você tem ${formatBRL(restante)} disponíveis este mês. Hoje você gastou ${formatBRL(totalHoje)}. No mês inteiro, ${formatBRL(totalMes)}.`;
-  useAutoSpeak(
-    state.onboarded ? balanceText : null,
-    speechSettings.enabled && speechSettings.autoSpeakBalance,
-  );
-
-  if (!state.onboarded) return <Navigate to="/bem-vindo" replace />;
-
   const visible = tiles;
 
   return (
     <AppShell>
       <section className="mb-8 rounded-3xl bg-gradient-primary p-6 text-primary-foreground shadow-elevated sm:p-8">
-        <div className="flex items-start justify-between gap-3">
-          <p className="text-sm font-semibold uppercase tracking-wider opacity-80">
-            Disponível este mês
-          </p>
-          <SpeakButton
-            text={balanceText}
-            label="Ouvir o saldo"
-            className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"
-          />
-        </div>
+        <p className="text-sm font-semibold uppercase tracking-wider opacity-80">
+          Disponível este mês
+        </p>
         <p className="mt-2 font-display text-4xl font-bold sm:text-5xl">
           {formatBRL(restante)}
         </p>
