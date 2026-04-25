@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CATEGORIES, Category, useAppState, formatBRL } from "@/lib/storage";
 import VoiceInput from "@/components/VoiceInput";
+import SpeakButton from "@/components/SpeakButton";
+import { useSpeak } from "@/lib/speech";
 import { useToast } from "@/hooks/use-toast";
 import { Check } from "lucide-react";
 
@@ -12,6 +14,7 @@ export default function AddExpense() {
   const navigate = useNavigate();
   const { state, addExpense, unlockAchievement } = useAppState();
   const { toast } = useToast();
+  const speak = useSpeak();
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<Category>("alimentacao");
   const [description, setDescription] = useState("");
@@ -19,6 +22,12 @@ export default function AddExpense() {
 
   const num = parseFloat(amount.replace(",", "."));
   const valid = isFinite(num) && num > 0;
+
+  const pickCategory = (c: Category) => {
+    setCategory(c);
+    const label = CATEGORIES.find((x) => x.id === c)?.label;
+    if (label) speak(`Categoria: ${label}`);
+  };
 
   const handleVoice = (text: string) => {
     const m = text.match(/(\d+[.,]?\d*)/);
