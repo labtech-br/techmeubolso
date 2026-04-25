@@ -76,7 +76,7 @@ export default function Assistant() {
     {
       role: "assistant",
       content:
-        "Olá! Eu sou o assistente do Meu Bolso 💚 Posso te dar dicas e também anotar gastos para você. Por exemplo: diga 'gastei 30 reais com pão' que eu registro.",
+        "Olá! Eu sou a Talita, sua assistente do Meu Bolso 💚 Posso te dar dicas e também anotar gastos para você. Por exemplo: diga 'gastei 30 reais com pão' que eu registro.",
     },
   ]);
   const [input, setInput] = useState("");
